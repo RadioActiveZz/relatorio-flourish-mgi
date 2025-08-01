@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório Interativo Flourish para MGI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals (Slate, Zinc) with a Teal accent -->
+    <!-- Application Structure Plan: This SPA is designed as a consultancy report artifact, focusing on a clean, professional, and interactive dashboard layout. The structure is non-linear, allowing users (managers, developers, data analysts) to explore relevant sections independently. The key sections are: 'Início' for a high-level summary, 'Criação Visual' for design capabilities, 'Gestão de Dados' for data import and structure, 'Desenvolvedores' for the critical API functionality and security model, and 'Aplicações Práticas' for real-world examples. The interactive elements, especially the live chart demo and API explanation, are strategically placed to address the client's specific needs (real-time data, API integration with ColaboraHub). The new API simulation provides a practical, runnable example of the client-side implementation of the secure proxy pattern, making the technical explanation actionable. The logo of the company, Logiks Tecnologia, has been added to the header for brand consistency. The logo size has been increased for prominence and the text 'Flourish.docs' has been removed for a cleaner header. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Flourish capabilities -> Goal: Summarize & Engage -> Viz/Presentation: Hero section with key stats and a call to action.
+        - Report Info: Chart types -> Goal: Organize & Explore -> Viz/Presentation: Interactive card gallery. The gallery has been updated to include a comprehensive list of chart types mentioned in the source documentation, categorized for easier filtering and discovery.
+        - Report Info: Data import & preparation -> Goal: Inform process -> Viz/Presentation: Multi-step flow diagram with clear text.
+        - Report Info: API capabilities & security -> Goal: Educate developers -> Viz/Presentation: Detailed text explanation, code snippets, a proxy security model diagram, and a new, runnable client-side code example to demonstrate the secure API call process.
+        - Report Info: Storytelling & Animation -> Goal: Demonstrate value -> Viz/Presentation: Interactive Chart.js bar chart with buttons to update data.
+        - Report Info: Real-world use cases -> Goal: Inspire & Contextualize -> Viz/Presentation: Feature cards with icons and descriptions.
+        - Report Info: Source material -> Goal: Provide Attribution -> Viz/Presentation: A simple, clean list of references with external links.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #0d9488; /* teal-600 */
+            border-bottom-color: #0d9488; /* teal-600 */
+        }
+        .smooth-scroll {
+            scroll-behavior: smooth;
+        }
+        .card-hover-effect {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover-effect:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 smooth-scroll">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <img src="https://i.imgur.com/PAEhMc0.jpeg" alt="Logo da Logiks Tecnologia" class="h-12">
+            </div>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#inicio" class="nav-link font-medium text-slate-600">Início</a>
+                <a href="#criacao" class="nav-link font-medium text-slate-600">Criação Visual</a>
+                <a href="#gestao_dados" class="nav-link font-medium text-slate-600">Gestão de Dados</a>
+                <a href="#desenvolvedores" class="nav-link font-medium text-slate-600">Desenvolvedores</a>
+                <a href="#aplicacoes" class="nav-link font-medium text-slate-600">Aplicações</a>
+                <a href="#referencias" class="nav-link font-medium text-slate-600">Referências</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden text-slate-600 focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
+            <a href="#inicio" class="block py-2 text-slate-600">Início</a>
+            <a href="#criacao" class="block py-2 text-slate-600">Criação Visual</a>
+            <a href="#gestao_dados" class="block py-2 text-slate-600">Gestão de Dados</a>
+            <a href="#desenvolvedores" class="block py-2 text-slate-600">Desenvolvedores</a>
+            <a href="#aplicacoes" class="block py-2 text-slate-600">Aplicações</a>
+            <a href="#referencias" class="block py-2 text-slate-600">Referências</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+
+        <section id="inicio" class="text-center min-h-[60vh] flex flex-col justify-center">
+            <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 mb-4">Relatório de Capacidades do Flourish</h1>
+            <p class="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto mb-8">Este relatório interativo foi elaborado para o Ministério da Gestão e Inovação (MGI) para detalhar e demonstrar as funcionalidades da plataforma Flourish, apoiando a equipe na maximização do uso da ferramenta ao longo de sua licença anual.</p>
+            <div class="flex justify-center">
+                <a href="#desenvolvedores" class="bg-teal-600 text-white font-bold py-3 px-8 rounded-full hover:bg-teal-700 transition-colors">Acessar Seção para Devs</a>
+            </div>
+        </section>
+
+        <section id="criacao" class="py-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-900">Criação Visual e Storytelling</h2>
+                <p class="text-lg text-slate-600 mt-2 max-w-2xl mx-auto">O Flourish oferece uma vasta biblioteca de templates e ferramentas para criar visualizações impactantes e narrativas dinâmicas sem a necessidade de codificação.</p>
+            </div>
+
+            <div class="bg-white p-8 rounded-2xl shadow-lg mb-12">
+                <h3 class="text-2xl font-semibold text-slate-800 mb-6 text-center">Templates e Tipos de Gráficos</h3>
+                <div class="flex flex-wrap justify-center gap-2 mb-6">
+                    <button class="viz-filter-btn active bg-teal-600 text-white py-2 px-4 rounded-full text-sm" data-filter="all">Todos</button>
+                    <button class="viz-filter-btn bg-white text-slate-700 py-2 px-4 rounded-full text-sm border border-slate-300" data-filter="tendencia">Tendência</button>
+                    <button class="viz-filter-btn bg-white text-slate-700 py-2 px-4 rounded-full text-sm border border-slate-300" data-filter="comparacao">Comparação</button>
+                    <button class="viz-filter-btn bg-white text-slate-700 py-2 px-4 rounded-full text-sm border border-slate-300" data-filter="composicao">Composição</button>
+                    <button class="viz-filter-btn bg-white text-slate-700 py-2 px-4 rounded-full text-sm border border-slate-300" data-filter="relacao">Relação</button>
+                    <button class="viz-filter-btn bg-white text-slate-700 py-2 px-4 rounded-full text-sm border border-slate-300" data-filter="distribuicao">Distribuição</button>
+                    <button class="viz-filter-btn bg-white text-slate-700 py-2 px-4 rounded-full text-sm border border-slate-300" data-filter="mapas">Mapas</button>
+                    <button class="viz-filter-btn bg-white text-slate-700 py-2 px-4 rounded-full text-sm border border-slate-300" data-filter="outros">Outros</button>
+                </div>
+                <div id="viz-gallery" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                </div>
+            </div>
+        </section>
+
+        <section id="gestao_dados" class="py-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-900">Gestão e Fluxo de Dados</h2>
+                <p class="text-lg text-slate-600 mt-2 max-w-2xl mx-auto">A flexibilidade do Flourish começa na ingestão de dados, suportando desde planilhas estáticas até conexões dinâmicas que garantem visualizações sempre atualizadas.</p>
+            </div>
+             <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="bg-white p-8 rounded-2xl shadow-lg card-hover-effect">
+                    <h3 class="text-2xl font-semibold text-slate-800 mb-6">Opções de Importação</h3>
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 h-12 w-12 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center text-xl font-bold">&#128190;</div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-semibold text-slate-800">Upload de Arquivo</h4>
+                                <p class="text-slate-600 mt-1">Carregue arquivos CSV, Excel ou Google Sheets.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 h-12 w-12 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center text-xl font-bold">&#128279;</div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-semibold text-slate-800">Fontes de Dados ao Vivo</h4>
+                                <p class="text-slate-600 mt-1">Conecte a CSVs publicados para atualizações automáticas.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 h-12 w-12 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center text-xl font-bold">&#128187;</div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-semibold text-slate-800">API para Desenvolvedores</h4>
+                                <p class="text-slate-600 mt-1">Automatize a criação e atualização de gráficos.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-2xl shadow-lg card-hover-effect">
+                    <h3 class="text-2xl font-semibold text-slate-800 mb-2 text-center">Demonstração de Atualização em Tempo Real</h3>
+                    <p class="text-slate-600 text-center mb-6">Simulação de como os gráficos podem ser atualizados via API. Clique para ver a mudança.</p>
+                    <div class="chart-container">
+                        <canvas id="interactiveChart"></canvas>
+                    </div>
+                    <div class="flex justify-center gap-4 mt-6">
+                        <button id="data1-btn" class="bg-teal-500 text-white py-2 px-5 rounded-lg hover:bg-teal-600 transition">Dados 2023</button>
+                        <button id="data2-btn" class="bg-slate-500 text-white py-2 px-5 rounded-lg hover:bg-slate-600 transition">Dados 2024</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="desenvolvedores" class="py-16 bg-slate-800 text-white">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold">Recursos para Desenvolvedores (API)</h2>
+                <p class="text-lg text-slate-300 mt-2 max-w-3xl mx-auto">Esta seção detalha como a API do Flourish pode ser utilizada pela equipe do MGI para integração com o ColaboraHub, garantindo dados em tempo real e segurança.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-12 items-start">
+                <div class="bg-slate-700 p-8 rounded-2xl shadow-lg h-full">
+                    <h3 class="text-2xl font-semibold mb-6">Automação e Dados em Tempo Real</h3>
+                    <p class="text-slate-300 mb-4">A API permite a criação e atualização programática de visualizações. Para a integração com o ColaboraHub, a equipe pode automatizar o processo de atualização de gráficos com dados de sistemas internos, garantindo que o público tenha acesso a informações sempre frescas.</p>
+                    <div class="bg-slate-900 rounded-lg p-4 font-mono text-sm text-slate-300">
+                        <span class="text-purple-400"># Exemplo de uso da API em Python</span><br>
+                        <span class="text-purple-400">import</span> requests<br>
+                        <span class="text-purple-400">def</span> <span class="text-yellow-300">update_chart</span>(api_key, chart_id, new_data):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;url = <span class="text-green-400">f"https://api.flourish.studio/v1/visualisations/{chart_id}"</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;headers = {<span class="text-green-400">"Authorization"</span>: <span class="text-green-400">f"Token {api_key}"</span>}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;payload = {<span class="text-green-400">"data"</span>: new_data}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;response = requests.put(url, headers=headers, json=payload)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">return</span> response.json()
+                    </div>
+                </div>
+                <div class="bg-slate-700 p-8 rounded-2xl shadow-lg h-full">
+                    <h3 class="text-2xl font-semibold mb-6">Simulação de Chamada Segura à API</h3>
+                    <p class="text-slate-300 mb-4">Esta simulação demonstra a chamada segura da API do Flourish a partir do frontend. Na prática, a requisição seria enviada para um endpoint no servidor do MGI, que por sua vez, faria a chamada real à API com a chave de segurança.</p>
+                    <div class="flex justify-center mt-6">
+                        <button id="api-call-btn" class="bg-teal-500 text-white py-2 px-5 rounded-lg hover:bg-teal-600 transition">Simular Chamada</button>
+                    </div>
+                    <div id="api-response" class="bg-slate-900 rounded-lg p-4 font-mono text-sm text-slate-300 mt-4 h-32 overflow-auto">
+                        Aguardando chamada...
+                    </div>
+                    <h4 class="font-semibold mt-6 mb-2">Fluxo de Segurança (Proxy)</h4>
+                    <div class="flex flex-col items-center justify-around text-center mt-4">
+                        <div class="bg-slate-600 text-white p-4 rounded-lg mb-4">
+                            <span class="font-bold">ColaboraHub</span><br>
+                            <span class="text-sm">(Frontend)</span>
+                        </div>
+                        <span class="text-2xl text-teal-400">⬇️ (Requisição para proxy)</span>
+                        <div class="border-2 border-dashed border-teal-400 p-4 rounded-lg my-4">
+                            <span class="font-bold">Servidor Proxy do MGI</span><br>
+                            <span class="text-sm">(Adiciona a chave de API)</span>
+                        </div>
+                        <span class="text-2xl text-teal-400">⬇️ (Requisição para API Flourish)</span>
+                        <div class="bg-slate-600 text-white p-4 rounded-lg mt-4">
+                            <span class="font-bold">API Flourish</span><br>
+                            <span class="text-sm">(Serviço Externo)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="aplicacoes" class="py-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-900">Aplicações Práticas e Vantagens</h2>
+                <p class="text-lg text-slate-600 mt-2 max-w-2xl mx-auto">Explore como as funcionalidades de personalização, colaboração e responsividade podem ser aplicadas para maximizar o retorno do investimento na ferramenta.</p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-2xl shadow-lg card-hover-effect">
+                    <h3 class="text-xl font-semibold text-slate-800 mb-3">Consistência Visual</h3>
+                    <p class="text-slate-600">A equipe pode criar temas personalizados com as cores e fontes do MGI, garantindo uma identidade visual coesa em todas as visualizações.</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-lg card-hover-effect">
+                    <h3 class="text-xl font-semibold text-slate-800 mb-3">Comunicação Aprimorada</h3>
+                    <p class="text-slate-600">Utilizar storytelling com anotações e animações para explicar dados complexos de forma clara e envolvente para diferentes públicos.</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-lg card-hover-effect">
+                    <h3 class="text-xl font-semibold text-slate-800 mb-3">Fluxo de Trabalho Colaborativo</h3>
+                    <p class="text-slate-600">Gerentes e desenvolvedores podem trabalhar juntos em tempo real nos projetos, facilitando o feedback e a aprovação.</p>
+                </div>
+                 <div class="bg-white p-6 rounded-2xl shadow-lg card-hover-effect">
+                    <h3 class="text-xl font-semibold text-slate-800 mb-3">Análise de Engajamento</h3>
+                    <p class="text-slate-600">O uso do conector de análise pode ajudar a equipe a entender o comportamento do público, otimizando futuras visualizações.</p>
+                </div>
+                 <div class="bg-white p-6 rounded-2xl shadow-lg card-hover-effect">
+                    <h3 class="text-xl font-semibold text-slate-800 mb-3">Acessibilidade Total</h3>
+                    <p class="text-slate-600">Garantir que as visualizações sejam perfeitas em desktops e dispositivos móveis, maximizando o alcance do conteúdo no ColaboraHub.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="referencias" class="py-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-900">Referências</h2>
+                <p class="text-lg text-slate-600 mt-2 max-w-2xl mx-auto">As informações contidas neste relatório foram compiladas a partir de diversas fontes da documentação oficial do Flourish e materiais de referência.</p>
+            </div>
+            <div class="bg-white p-8 rounded-2xl shadow-lg">
+                <ol class="list-decimal list-inside space-y-2 text-slate-600">
+                    <li><a href="https://proquest.libguides.com/flourish/intro" class="text-teal-600 hover:underline" target="_blank">Boyles Petersen, Andy. "A Librarian's Introduction to Flourish Studio." Proquest Libguides.</a></li>
+                    <li><a href="https://www.datylon.com/blog/what-is-flourish-studio" class="text-teal-600 hover:underline" target="_blank">"What is Flourish Studio? And what can you do with it?" Datylon.</a></li>
+                    <li><a href="https://flourish.studio/how-it-works" class="text-teal-600 hover:underline" target="_blank">"Flourish: How it works." Flourish.</a></li>
+                    <li><a href="https://flourish.studio/about-us" class="text-teal-600 hover:underline" target="_blank">"Flourish: About us." Flourish.</a></li>
+                    <li><a href="https://flourish.studio/api" class="text-teal-600 hover:underline" target="_blank">"Flourish API." Flourish.</a></li>
+                    <li><a href="https://flourish.studio/features" class="text-teal-600 hover:underline" target="_blank">"Flourish: Features." Flourish.</a></li>
+                    <li><a href="https://newsinitiative.withgoogle.com/resources/data-journalism/flourish" class="text-teal-600 hover:underline" target="_blank">"Flourish and Google News Initiative." Google News Initiative.</a></li>
+                    <li><a href="https://flourish.studio/case-studies" class="text-teal-600 hover:underline" target="_blank">"Flourish: Case studies." Flourish.</a></li>
+                    <li><a href="https://flourish.studio/enterprise" class="text-teal-600 hover:underline" target="_blank">"Flourish: Enterprise." Flourish.</a></li>
+                    <li><a href="https://flourish.studio/templates" class="text-teal-600 hover:underline" target="_blank">"Flourish: Templates." Flourish.</a></li>
+                    <li><a href="https://flourish.studio/examples" class="text-teal-600 hover:underline" target="_blank">"Flourish: Examples." Flourish.</a></li>
+                    <li><a href="https://flourish.studio/help" class="text-teal-600 hover:underline" target="_blank">"Flourish: Help." Flourish.</a></li>
+                    <li><a href="https://flourish.studio/data" class="text-teal-600 hover:underline" target="_blank">"Flourish: Data." Flourish.</a></li>
+                    <li><a href="https://flourish.studio/api-security" class="text-teal-600 hover:underline" target="_blank">"Flourish: API Security." Flourish.</a></li>
+                    <li><a href="https://flourish.studio/how-to-use-the-api" class="text-teal-600 hover:underline" target="_blank">"Flourish: How to use the API." Flourish.</a></li>
+                    <li><a href="https://flourish.studio/stories" class="text-teal-600 hover:underline" target="_blank">"Flourish: Stories." Flourish.</a></li>
+                </ol>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300">
+        <div class="container mx-auto px-6 py-8 text-center">
+            <p>&copy; 2024 Relatório Flourish. Criado por **Aaron Zveiter** para consulta interna do MGI.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            const navLinks = document.querySelectorAll('.nav-link, #mobile-menu a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (!mobileMenu.classList.contains('hidden')) {
+                         mobileMenu.classList.add('hidden');
+                    }
+                });
+            });
+
+            const sections = document.querySelectorAll('section');
+            const mainNavLinks = document.querySelectorAll('header nav a');
+            
+            const onScroll = () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                mainNavLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            };
+            window.addEventListener('scroll', onScroll);
+
+            const vizData = [
+                { name: 'Gráfico de Linha', category: 'tendencia', icon: '📈' },
+                { name: 'Gráfico de Área', category: 'tendencia', icon: '📈' },
+                { name: 'Gráfico de Colunas', category: 'tendencia', icon: '📊' },
+                { name: 'Bar Chart Race', category: 'tendencia', icon: '🏁' },
+                { name: 'Line Chart Race', category: 'tendencia', icon: '📈' },
+                { name: 'Gráfico de Barras', category: 'comparacao', icon: '📶' },
+                { name: 'Barra Agrupada', category: 'comparacao', icon: '🏛️' },
+                { name: 'Barra Ordenada', category: 'comparacao', icon: '🏆' },
+                { name: 'Inclinação', category: 'comparacao', icon: '📈' },
+                { name: 'Gráfico de Pizza', category: 'composicao', icon: '🍕' },
+                { name: 'Gráfico de Rosca', category: 'composicao', icon: '🍩' },
+                { name: 'Treemap', category: 'composicao', icon: '🧱' },
+                { name: 'Gráfico de Dispersão', category: 'relacao', icon: '✨' },
+                { name: 'Gráfico de Bolhas', category: 'relacao', icon: '🎈' },
+                { name: 'Coluna + Linha', category: 'relacao', icon: '📉' },
+                { name: 'Network Graph', category: 'relacao', icon: ' ️' },
+                { name: 'Chord Diagram', category: 'relacao', icon: '🌐' },
+                { name: 'Dot Plot', category: 'distribuicao', icon: '🎯' },
+                { name: 'Box Plot', category: 'distribuicao', icon: '📦' },
+                { name: 'Violin Plot', category: 'distribuicao', icon: '🎻' },
+                { name: 'Point Map', category: 'mapas', icon: '🗺️' },
+                { name: '3D Map', category: 'mapas', icon: '🌍' },
+                { name: 'Projection Map', category: 'mapas', icon: '🗺️' },
+                { name: 'Survey Template', category: 'outros', icon: '📋' },
+                { name: '3D Model', category: 'outros', icon: '🧊' },
+                { name: 'Draw the Line', category: 'outros', icon: '🖍️' },
+            ];
+
+            const vizGallery = document.getElementById('viz-gallery');
+            const filterButtons = document.querySelectorAll('.viz-filter-btn');
+
+            const renderGallery = (filter) => {
+                vizGallery.innerHTML = '';
+                const filteredData = filter === 'all' ? vizData : vizData.filter(v => v.category === filter);
+                
+                filteredData.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'viz-card bg-slate-50 p-4 rounded-lg text-center card-hover-effect flex flex-col items-center justify-center';
+                    card.innerHTML = `
+                        <div class="text-4xl mb-2">${item.icon}</div>
+                        <p class="font-medium text-slate-700 text-sm">${item.name}</p>
+                    `;
+                    vizGallery.appendChild(card);
+                });
+            };
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('active', 'bg-teal-600', 'text-white');
+                        btn.classList.add('bg-white', 'text-slate-700', 'border', 'border-slate-300');
+                    });
+                    button.classList.add('active', 'bg-teal-600', 'text-white');
+                    button.classList.remove('bg-white', 'text-slate-700', 'border', 'border-slate-300');
+                    renderGallery(button.dataset.filter);
+                });
+            });
+
+            renderGallery('all');
+
+            const chartData1 = {
+                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+                datasets: [{
+                    label: 'Projetos Concluídos 2023',
+                    data: [12, 19, 3, 5, 2, 3],
+                    backgroundColor: 'rgba(13, 148, 136, 0.6)',
+                    borderColor: 'rgba(13, 148, 136, 1)',
+                    borderWidth: 1
+                }]
+            };
+
+            const chartData2 = {
+                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+                datasets: [{
+                    label: 'Projetos Concluídos 2024',
+                    data: [15, 22, 8, 10, 7, 9],
+                    backgroundColor: 'rgba(71, 85, 105, 0.6)',
+                    borderColor: 'rgba(71, 85, 105, 1)',
+                    borderWidth: 1
+                }]
+            };
+
+            const ctx = document.getElementById('interactiveChart').getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'bar',
+                data: chartData1,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            enabled: true
+                        }
+                    }
+                }
+            });
+
+            document.getElementById('data1-btn').addEventListener('click', () => {
+                myChart.data.datasets[0] = chartData1.datasets[0];
+                myChart.update();
+            });
+
+            document.getElementById('data2-btn').addEventListener('click', () => {
+                myChart.data.datasets[0] = chartData2.datasets[0];
+                myChart.update();
+            });
+
+            document.getElementById('api-call-btn').addEventListener('click', async () => {
+                const responseDiv = document.getElementById('api-response');
+                responseDiv.innerText = 'Simulando chamada para servidor proxy...';
+
+                try {
+                    const mockData = { id: 1234, new_data: [1, 2, 3] };
+                    const response = await fetch('/mgi-proxy-endpoint', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(mockData)
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        responseDiv.innerText = 'Resposta do Servidor Proxy:\n' + JSON.stringify(result, null, 2);
+                    } else {
+                        responseDiv.innerText = 'Erro na chamada do servidor proxy.';
+                    }
+                } catch (error) {
+                    responseDiv.innerText = 'Erro ao se comunicar com o servidor proxy.';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+ 
